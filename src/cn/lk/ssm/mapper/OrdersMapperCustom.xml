@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lk.ssm.mapper.OrdersMapperCustom" >
+
+	<insert id="insertOrder" parameterType="map">
+		INSERT INTO orders (username,number,createtime,items_id,counts,totalcash) VALUES (#{username},#{number},#{createtime},#{items_id},#{counts},#{totalcash})
+	</insert>
+	
+	<select id="findOrdersByName" parameterType="cn.lk.ssm.po.OrderCustom" resultType="map">
+		SELECT orders.id,username,number,orders.createtime,counts,totalcash,name,detail,price,items.pic
+		from orders 
+		LEFT JOIN items on orders.items_id=items.id
+		where username=#{username}
+	</select>
+</mapper>

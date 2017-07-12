@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lk.ssm.mapper.UserMapperCustom" >
+
+   <!-- 定义商品查询的sql片段，就是商品查询条件 -->
+<!--    <sql id="query_user_where"> -->
+   	<!-- 使用动态sql，通过if判断，满足条件进行sql拼接 -->
+   	<!-- 商品查询条件通过ItemsQueryVo包装对象 中itemsCustom属性传递 -->
+<!--    		<if test="userCustom!=null">
+   			<if test="userCustom.username!=null and userCustom.username!=''">
+   				user.username LIKE '%${userCustom.username}%'
+   			</if>
+   		</if>
+	
+   </sql> -->
+  	
+  	<sql id="query_user_where">
+		<if test="userCustom!=null">
+				<if test="userCustom.sex!=null and userCustom.sex!=''">
+					and user.sex=#{userCustom.sex}
+				</if>
+				<if test="userCustom.username!=null and userCustom.username!=''">
+					and user.username like '%${userCustom.username}%'
+				</if>
+<!-- 				<if test="ids!=null">
+					<foreach collection="ids" item="user_id" open="AND (" close=")" separator="or">
+						id=#{user_id}
+					</foreach>
+				</if> -->
+			</if>
+	</sql>
+  	
+  	<!-- 商品列表查询 -->
+  	<!-- parameterType传入包装对象(包装了查询条件)
+  		resultType建议使用扩展对象
+  	 -->
+  	<select id="findUserByName" parameterType="cn.lk.ssm.po.UserQueryVo"
+  		 resultType="cn.lk.ssm.po.UserCustom">
+  		SELECT * FROM user where username=#{userCustom.username}
+  	</select>
+  	<select id="findUserById" parameterType="int" resultType="user">
+		SELECT * FROM USER WHERE id=#{value}
+	</select>
+	<select id="userLogin" parameterType="cn.lk.ssm.po.UserQueryVo" resultType="cn.lk.ssm.po.UserCustom">
+		SELECT * FROM user where username=#{userCustom.username} and password=#{userCustom.password}
+	</select>
+	
+	<insert id="insertUser" parameterType="map" >
+		INSERT INTO user (username,birthday,sex,address,PASSWORD,phone) VALUES(#{username},#{birthday},#{sex},#{address},#{password},#{phone})
+	</insert>
+	<update id="updateUser" parameterType="map">
+		UPDATE `user` SET birthday=#{birthday},sex=#{sex},address=#{address},`password`=#{password},phone=#{phone} WHERE username=#{username}
+	</update>
+  	
+</mapper>
